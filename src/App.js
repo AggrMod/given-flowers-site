@@ -311,32 +311,7 @@ const GivenFlowersHero = () => {
               </p>
             </div>
 
-            {/* Bouncer Section - Extra Special for Mobile! */}
-            <div className="mb-8 animate-fade-in animation-delay-1000">
-              <div className="relative inline-block">
-                <img 
-                  src={bouncerImage} 
-                  alt="Bouncer - Our Community Guardian Dog" 
-                  className="mx-auto rounded-2xl shadow-2xl max-w-full hover:scale-105 transition-transform duration-300 cursor-pointer"
-                  style={{ maxWidth: '400px', minHeight: '300px' }}
-                  onClick={() => setShowExitPopup(true)} // Let people tap to see popup on mobile!
-                />
-                <div className="absolute -bottom-4 -right-4 bg-gradient-to-r from-orange-500 to-yellow-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-bounce">
-                  Meet Bouncer! 🐕
-                </div>
-                {/* Mobile hint */}
-                <div className="md:hidden absolute -top-4 -left-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg animate-pulse">
-                  Tap me! 👆
-                </div>
-              </div>
-              <p className="text-sm text-gray-600 text-center mt-6">
-                Bouncer keeps watch over our flower community - ensuring every smile is genuine! 🌻
-                <br />
-                <span className="text-xs text-orange-500 md:hidden">
-                  (Tap Bouncer above to join our community!)
-                </span>
-              </p>
-            </div>
+
 
             {/* Quote */}
             <div className="mt-8 p-4 bg-white/50 backdrop-blur rounded-2xl max-w-2xl mx-auto animate-fade-in animation-delay-1200">
