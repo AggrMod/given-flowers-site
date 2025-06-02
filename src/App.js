@@ -123,7 +123,7 @@ const GivenFlowersHero = () => {
     >
       <span className="text-4xl">{emoji}</span>
     
-    */</div>
+ </div>
   );
 
   return (
