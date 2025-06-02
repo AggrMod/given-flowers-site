@@ -1,0 +1,16 @@
+/* CSS for hero section with cropping applied directly in CSS */
+.hero-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/given-flowers-hero.gif');
+  background-size: cover;
+  background-position: center top; /* Position from top to hide bottom text */
+  background-repeat: no-repeat;
+  z-index: -2;
+  /* This next line effectively crops the bottom 10% */
+  height: 90%;
+  overflow: hidden;
+}
