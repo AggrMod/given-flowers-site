@@ -111,6 +111,7 @@ const GivenFlowersHero = () => {
     }, 200);
   };
 
+  /*
   const FloatingFlower = ({ delay, emoji }) => (
     <div 
       className="absolute animate-float opacity-20"
@@ -121,7 +122,8 @@ const GivenFlowersHero = () => {
       }}
     >
       <span className="text-4xl">{emoji}</span>
-    </div>
+    
+    */</div>
   );
 
   return (
