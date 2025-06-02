@@ -153,7 +153,7 @@ const GivenFlowersHero = () => {
             className="w-full h-full object-cover"
           />
           {/* Gradient overlay for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/50"></div>
+          <div className="absolute inset-0 hero-gradient-overlay"></div>
         </div>
 
         {/* Navigation - Over the GIF */}
@@ -597,52 +597,6 @@ const GivenFlowersHero = () => {
           </div>
         </div>
       )}
-
-      <style jsx>{`
-        @keyframes fade-in {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes float {
-          0%, 100% { transform: translateY(0) rotate(0deg); }
-          25% { transform: translateY(-20px) rotate(5deg); }
-          75% { transform: translateY(20px) rotate(-5deg); }
-        }
-        @keyframes wiggle {
-          0%, 100% { transform: rotate(0deg); }
-          25% { transform: rotate(-10deg); }
-          75% { transform: rotate(10deg); }
-        }
-        @keyframes scale-up {
-          from { opacity: 0; transform: scale(0.9); }
-          to { opacity: 1; transform: scale(1); }
-        }
-        @keyframes gradient {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        @keyframes pulse-subtle {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.8; }
-        }
-        
-        .animate-fade-in { animation: fade-in 0.8s ease-out forwards; }
-        .animate-float { animation: float 20s ease-in-out infinite; }
-        .animate-wiggle { animation: wiggle 0.5s ease-in-out; }
-        .animate-scale-up { animation: scale-up 0.3s ease-out; }
-        .animate-gradient { background-size: 200% 200%; animation: gradient 3s ease infinite; }
-        .animate-pulse-subtle { animation: pulse-subtle 3s ease-in-out infinite; }
-        
-        .animation-delay-200 { animation-delay: 0.2s; opacity: 0; }
-        .animation-delay-400 { animation-delay: 0.4s; opacity: 0; }
-        .animation-delay-600 { animation-delay: 0.6s; opacity: 0; }
-        .animation-delay-800 { animation-delay: 0.8s; opacity: 0; }
-        .animation-delay-900 { animation-delay: 0.9s; opacity: 0; }
-        .animation-delay-1000 { animation-delay: 1s; opacity: 0; }
-        .animation-delay-1200 { animation-delay: 1.2s; opacity: 0; }
-        .animation-delay-2000 { animation-delay: 2s; }
-        .animation-delay-4000 { animation-delay: 4s; }
-      `}</style>
     </>
   );
 };
