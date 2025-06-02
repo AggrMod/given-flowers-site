@@ -5,7 +5,7 @@ import './App.css';
 const logoImage = '/given-flowers-logo.jpg';
 const bouncerImage = '/bouncer.jpg';
 const tableImage = '/table-demo.png';
-const heroGif = '/given-flowers-hero.gif';
+const heroGif = '/given-flowers-hero.gif'; // New hero GIF reference
 
 const GivenFlowersHero = () => {
   const [donationAmount, setDonationAmount] = useState('25');
@@ -137,6 +137,34 @@ const GivenFlowersHero = () => {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.5; }
         }
+        
+        /* Hero section with GIF background */
+        .hero-section {
+          position: relative;
+          z-index: 1;
+        }
+        
+        .hero-background {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-image: url('${heroGif}');
+          background-size: cover;
+          background-position: center;
+          z-index: -2;
+        }
+        
+        .hero-overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(255, 253, 240, 0.85);
+          z-index: -1;
+        }
       `}</style>
 
       {/* Hidden Netlify form */}
@@ -157,7 +185,7 @@ const GivenFlowersHero = () => {
       )}
 
       {/* Hero Section with GIF Background */}
-      <div className="hero-section">
+      <div className="bg-gradient-to-br from-orange-50 via-yellow-50 to-rose-50 min-h-screen relative overflow-hidden hero-section">
         {/* Hero GIF Background */}
         <div className="hero-background"></div>
         
@@ -226,74 +254,98 @@ const GivenFlowersHero = () => {
         </nav>
 
         {/* Hero Content */}
-        <div className="hero-content">
-          {/* Urgency banner */}
-          <div className="inline-block bg-gradient-to-r from-orange-100 to-yellow-100 text-orange-700 px-6 py-3 rounded-full text-sm font-semibold mb-6 animate-bounce shadow-lg">
-            <span className="animate-pulse">✨</span> Spring 2024 Cohort - Only 5 Spots Left! <span className="animate-pulse">✨</span>
-          </div>
+        <div className="relative z-10 pt-10 pb-20 px-6">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left side - Text content */}
+            <div className="text-center lg:text-left">
+              {/* Urgency banner */}
+              <div className="inline-block bg-gradient-to-r from-orange-100 to-yellow-100 text-orange-700 px-6 py-3 rounded-full text-sm font-semibold mb-6 animate-bounce shadow-lg">
+                <span className="animate-pulse">✨</span> Spring 2024 Cohort - Only 5 Spots Left! <span className="animate-pulse">✨</span>
+              </div>
 
-          <h1 className="hero-title animate-fade-in">
-            Let's Make a Difference 
-            <span className="hero-subtitle block animate-gradient">
-              Together—One Flower at a Time
-            </span>
-          </h1>
-
-          <p className="hero-description animate-fade-in animation-delay-200">
-            Join the movement spreading joy across communities. 
-            <span className="font-semibold text-orange-600"> Donate today or host a table</span>—your 
-            <span className="inline-block animate-pulse text-rose-500 mx-2">❤️</span>
-            community is waiting.
-          </p>
-
-          {/* CTAs */}
-          <div className="hero-cta animate-fade-in animation-delay-400">
-            <button
-              onClick={() => setShowDonationModal(true)}
-              onMouseEnter={() => setHoveredButton('donate')}
-              onMouseLeave={() => setHoveredButton(null)}
-              className="hero-button primary-button group relative overflow-hidden"
-            >
-              <span className="relative z-10 flex items-center justify-center space-x-2">
-                <span>Donate Now</span>
-                <span className="text-xl transform transition-transform group-hover:rotate-12">
-                  {hoveredButton === 'donate' ? '💝' : '🌻'}
+              <h1 className="text-5xl md:text-6xl font-bold text-gray-800 mb-6 leading-tight animate-fade-in">
+                Let's Make a Difference 
+                <span className="block bg-gradient-to-r from-yellow-400 via-rose-400 to-orange-400 bg-clip-text text-transparent animate-gradient">
+                  Together—One Flower at a Time
                 </span>
-              </span>
-              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transform translate-x-[-100%] group-hover:translate-x-[100%] transition-all duration-1000"></div>
-            </button>
+              </h1>
 
-            <button
-              onMouseEnter={() => setHoveredButton('host')}
-              onMouseLeave={() => setHoveredButton(null)}
-              className="hero-button secondary-button group relative overflow-hidden"
-            >
-              <span className="relative z-10 flex items-center justify-center space-x-2">
-                <span>Host a Table</span>
-                <span className="text-xl transform transition-transform group-hover:rotate-12">
-                  {hoveredButton === 'host' ? '🌺' : '🌹'}
-                </span>
-              </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-orange-50 to-yellow-50 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
-            </button>
-          </div>
+              <p className="text-xl text-gray-700 mb-8 max-w-2xl animate-fade-in animation-delay-200">
+                Join the movement spreading joy across communities. 
+                <span className="font-semibold text-orange-600"> Donate today or host a table</span>—your 
+                <span className="inline-block animate-pulse text-rose-500 mx-2">❤️</span>
+                community is waiting.
+              </p>
 
-          {/* Live counter */}
-          <div className="stats-container animate-fade-in animation-delay-600">
-            <div className="stat-item group">
-              <span className="stat-icon group-hover:animate-wiggle">🌸</span>
-              <span className="stat-value">127</span>
-              <span className="stat-label">Active Tables</span>
+              {/* CTAs */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8 animate-fade-in animation-delay-400">
+                <button
+                  onClick={() => setShowDonationModal(true)}
+                  onMouseEnter={() => setHoveredButton('donate')}
+                  onMouseLeave={() => setHoveredButton(null)}
+                  className="group relative px-8 py-4 bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-bold text-lg rounded-full shadow-2xl transform hover:scale-105 transition-all duration-300 hover:shadow-orange-500/25 min-w-[200px] overflow-hidden"
+                >
+                  <span className="relative z-10 flex items-center justify-center space-x-2">
+                    <span>Donate Now</span>
+                    <span className="text-xl transform transition-transform group-hover:rotate-12">
+                      {hoveredButton === 'donate' ? '💝' : '🌻'}
+                    </span>
+                  </span>
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transform translate-x-[-100%] group-hover:translate-x-[100%] transition-all duration-1000"></div>
+                </button>
+
+                <button
+                  onMouseEnter={() => setHoveredButton('host')}
+                  onMouseLeave={() => setHoveredButton(null)}
+                  className="group px-8 py-4 bg-white text-orange-600 font-bold text-lg rounded-full shadow-lg border-2 border-orange-300 hover:border-orange-500 hover:shadow-xl transition-all duration-300 min-w-[200px] relative overflow-hidden"
+                >
+                  <span className="relative z-10 flex items-center justify-center space-x-2">
+                    <span>Host a Table</span>
+                    <span className="text-xl transform transition-transform group-hover:rotate-12">
+                      {hoveredButton === 'host' ? '🌺' : '🌹'}
+                    </span>
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-orange-50 to-yellow-50 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
+                </button>
+              </div>
+
+              {/* Live counter */}
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-6 text-gray-700 animate-fade-in animation-delay-600">
+                <div className="flex items-center space-x-2 group">
+                  <span className="text-2xl group-hover:animate-wiggle">🌸</span>
+                  <span className="font-semibold">127 Active Tables</span>
+                </div>
+                <div className="flex items-center space-x-2 group">
+                  <span className="text-2xl group-hover:animate-wiggle">💐</span>
+                  <span className="font-semibold">{flowerCount.toLocaleString()}+ Flowers Given</span>
+                </div>
+                <div className="flex items-center space-x-2 group">
+                  <span className="text-2xl group-hover:animate-wiggle">🌍</span>
+                  <span className="font-semibold">23 Cities</span>
+                </div>
+              </div>
             </div>
-            <div className="stat-item group">
-              <span className="stat-icon group-hover:animate-wiggle">💐</span>
-              <span className="stat-value">{flowerCount.toLocaleString()}+</span>
-              <span className="stat-label">Flowers Given</span>
-            </div>
-            <div className="stat-item group">
-              <span className="stat-icon group-hover:animate-wiggle">🌍</span>
-              <span className="stat-value">23</span>
-              <span className="stat-label">Cities</span>
+
+            {/* Right side - Table Demo Image */}
+            <div className="relative animate-fade-in animation-delay-800">
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-500">
+                <img 
+                  src={tableImage} 
+                  alt="Given Flowers table setup with volunteers spreading joy" 
+                  className="w-full h-auto object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                
+                {/* Image overlay text */}
+                <div className="absolute bottom-8 left-8 right-8 text-white">
+                  <h3 className="text-2xl font-bold mb-2 drop-shadow-lg">100% FREE Flowers 🌻</h3>
+                  <p className="text-lg drop-shadow">No catch. Just spreading joy in our communities.</p>
+                </div>
+              </div>
+
+              {/* Decorative elements */}
+              <div className="absolute -top-4 -right-4 text-6xl animate-pulse-subtle animation-delay-900">🌺</div>
+              <div className="absolute -bottom-4 -left-4 text-6xl animate-pulse-subtle animation-delay-1000">🌻</div>
             </div>
           </div>
         </div>
@@ -306,7 +358,7 @@ const GivenFlowersHero = () => {
             Quick donation options 
             <span className="inline-block ml-2 animate-pulse">💕</span>
           </p>
-          <div className="donation-buttons">
+          <div className="flex flex-wrap justify-center gap-3">
             {[
               { amount: '10', message: '5 smiles' },
               { amount: '25', message: '12 flowers' },
@@ -316,7 +368,7 @@ const GivenFlowersHero = () => {
               <div key={amount} className="group relative">
                 <button
                   onClick={() => handleDonation(amount)}
-                  className="donation-button"
+                  className="px-6 py-2 bg-gradient-to-r from-orange-100 to-yellow-100 text-orange-700 rounded-full hover:from-orange-200 hover:to-yellow-200 transition-all text-sm font-semibold transform hover:scale-105 hover:shadow-md"
                 >
                   ${amount}
                 </button>
