@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import logoImage from './logo.jpg';
+import logoImage from './given-flowers-logo.jpg';
+import bouncerImage from './bouncer.jpg';
 
 const GivenFlowersHero = () => {
   const [donationAmount, setDonationAmount] = useState('25');
   const [showDonationModal, setShowDonationModal] = useState(false);
+  const [showExitPopup, setShowExitPopup] = useState(false);
+  const [hasShownExitPopup, setHasShownExitPopup] = useState(false);
   const [flowerCount, setFlowerCount] = useState(50000);
   const [hoveredButton, setHoveredButton] = useState(null);
+  const [logoPosition, setLogoPosition] = useState('normal');
+  const [isHoveringLogo, setIsHoveringLogo] = useState(false);
+  const [email, setEmail] = useState('');
+  const [sessionStartTime] = useState(Date.now());
   
   // Animate flower counter
   useEffect(() => {
@@ -16,13 +23,78 @@ const GivenFlowersHero = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // Exit intent detection for desktop and mobile
+  useEffect(() => {
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    if (isMobile) {
+      // Mobile: Timer-based popup after 30 seconds
+      const mobileTimer = setTimeout(() => {
+        if (!hasShownExitPopup && !showExitPopup) {
+          setShowExitPopup(true);
+          setHasShownExitPopup(true);
+        }
+      }, 30000); // 30 seconds
+
+      return () => clearTimeout(mobileTimer);
+    } else {
+      // Desktop: Mouse leave detection
+      const handleMouseLeave = (e) => {
+        if (e.clientY <= 0 && !hasShownExitPopup && !showExitPopup) {
+          setShowExitPopup(true);
+          setHasShownExitPopup(true);
+        }
+      };
+
+      document.addEventListener('mouseleave', handleMouseLeave);
+      return () => document.removeEventListener('mouseleave', handleMouseLeave);
+    }
+  }, [hasShownExitPopup, showExitPopup]);
+
   const handleDonation = (amount) => {
     console.log(`Processing donation of $${amount}`);
-    // In production, replace with actual payment processor
     alert(`Thank you for your $${amount} donation! 🌻 In production, this would process through Stripe.`);
+    if (showDonationModal) setShowDonationModal(false);
+    if (showExitPopup) setShowExitPopup(false);
   };
 
-  // Floating flowers animation
+  const handleEmailSubmit = async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData();
+    formData.append('form-name', 'flower-signup');
+    formData.append('email', email);
+
+    try {
+      await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(formData).toString()
+      });
+      
+      alert('Thanks for joining our flower community! 🌸');
+      setShowExitPopup(false);
+      setEmail('');
+    } catch (error) {
+      console.error('Form submission error:', error);
+      alert('Oops! Something went wrong. Please try again.');
+    }
+  };
+
+  const handleLogoMouseEnter = () => {
+    setIsHoveringLogo(true);
+    setTimeout(() => {
+      setLogoPosition('top');
+    }, 100);
+  };
+
+  const handleLogoMouseLeave = () => {
+    setIsHoveringLogo(false);
+    setTimeout(() => {
+      setLogoPosition('normal');
+    }, 200);
+  };
+
   const FloatingFlower = ({ delay, emoji }) => (
     <div 
       className="absolute animate-float opacity-20"
@@ -38,9 +110,26 @@ const GivenFlowersHero = () => {
 
   return (
     <>
-      {/* Hero Section with Love */}
+      {/* Hidden Netlify form */}
+      <form name="flower-signup" netlify hidden>
+        <input type="email" name="email" />
+      </form>
+
+      {/* Fixed Logo Position */}
+      {logoPosition === 'top' && (
+        <div className="fixed top-4 left-4 z-50 transition-all duration-500">
+          <img 
+            src={logoImage} 
+            alt="Given Flowers Logo" 
+            className="rounded-full shadow-2xl animate-fade-in"
+            style={{ width: '80px', height: '80px', objectFit: 'cover' }}
+          />
+        </div>
+      )}
+
+      {/* Hero Section */}
       <div className="bg-gradient-to-br from-orange-50 via-yellow-50 to-rose-50 relative overflow-hidden">
-        {/* Floating flowers in background */}
+        {/* Floating flowers */}
         {[...Array(8)].map((_, i) => (
           <FloatingFlower 
             key={i} 
@@ -49,23 +138,32 @@ const GivenFlowersHero = () => {
           />
         ))}
 
-        {/* Animated background circles */}
+        {/* Background circles */}
         <div className="absolute inset-0">
           <div className="absolute top-20 left-10 w-96 h-96 bg-orange-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
           <div className="absolute bottom-20 right-10 w-96 h-96 bg-yellow-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse animation-delay-2000"></div>
           <div className="absolute top-40 right-20 w-64 h-64 bg-rose-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse animation-delay-4000"></div>
         </div>
 
-        {/* Navigation Bar with Love */}
+        {/* Navigation */}
         <nav className="relative z-20 p-6">
           <div className="max-w-7xl mx-auto flex justify-between items-center">
-            <div className="flex items-center space-x-3 group cursor-pointer">
-              {/* Logo image */}
+            <div 
+              className="flex items-center space-x-3 group cursor-pointer"
+              onMouseEnter={handleLogoMouseEnter}
+              onMouseLeave={handleLogoMouseLeave}
+            >
               <img 
                 src={logoImage} 
                 alt="Given Flowers Logo" 
-                className="rounded-full transform group-hover:rotate-12 transition-transform object-cover shadow-lg"
-                style={{ width: '150px', height: '150px', objectFit: 'cover' }}
+                className={`rounded-full transform transition-all duration-500 object-cover shadow-lg ${
+                  isHoveringLogo ? 'rotate-12 scale-110' : ''
+                } ${logoPosition === 'top' ? 'opacity-50' : 'opacity-100'}`}
+                style={{ 
+                  width: logoPosition === 'normal' ? '150px' : '120px', 
+                  height: logoPosition === 'normal' ? '150px' : '120px', 
+                  objectFit: 'cover' 
+                }}
               />
               <div>
                 <span className="text-2xl font-bold" style={{color: '#D2691E', fontFamily: 'cursive'}}>
@@ -97,15 +195,15 @@ const GivenFlowersHero = () => {
           </div>
         </nav>
 
-        {/* Hero Content with Extra Heart */}
+        {/* Hero Content */}
         <div className="relative z-10 flex items-center justify-center py-0 px-6">
           <div className="text-center max-w-5xl mx-auto">
-            {/* Urgency banner with animation */}
+            {/* Urgency banner */}
             <div className="inline-block bg-gradient-to-r from-orange-100 to-yellow-100 text-orange-700 px-6 py-3 rounded-full text-sm font-semibold mb-6 animate-bounce shadow-lg">
               <span className="animate-pulse">✨</span> Spring 2024 Cohort - Only 5 Spots Left! <span className="animate-pulse">✨</span>
             </div>
 
-            {/* Main headline with love */}
+            {/* Main headline */}
             <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight animate-fade-in">
               <span className="block text-gray-800">Let's Make a Difference</span>
               <span className="block bg-gradient-to-r from-orange-600 via-rose-500 to-yellow-600 bg-clip-text text-transparent animate-gradient">
@@ -113,7 +211,7 @@ const GivenFlowersHero = () => {
               </span>
             </h1>
 
-            {/* Subheadline with heart */}
+            {/* Subheadline */}
             <p className="text-xl md:text-2xl text-gray-700 mb-10 max-w-3xl mx-auto animate-fade-in animation-delay-200">
               Join the movement spreading joy across communities. 
               <span className="font-semibold text-orange-600"> Donate today or host a table</span>—your 
@@ -121,7 +219,7 @@ const GivenFlowersHero = () => {
               community is waiting.
             </p>
 
-            {/* PRIMARY CTAs with extra animations */}
+            {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8 animate-fade-in animation-delay-400">
               <button
                 onClick={() => setShowDonationModal(true)}
@@ -135,23 +233,7 @@ const GivenFlowersHero = () => {
                     {hoveredButton === 'donate' ? '💝' : '🌻'}
                   </span>
                 </span>
-                {/* Shimmer effect */}
                 <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transform translate-x-[-100%] group-hover:translate-x-[100%] transition-all duration-1000"></div>
-                {/* Particle effect on hover */}
-                {hoveredButton === 'donate' && (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    {[...Array(6)].map((_, i) => (
-                      <div
-                        key={i}
-                        className="absolute w-2 h-2 bg-yellow-300 rounded-full animate-particle"
-                        style={{
-                          animationDelay: `${i * 0.1}s`,
-                          transform: `rotate(${i * 60}deg) translateX(40px)`
-                        }}
-                      />
-                    ))}
-                  </div>
-                )}
               </button>
 
               <button
@@ -165,12 +247,11 @@ const GivenFlowersHero = () => {
                     {hoveredButton === 'host' ? '🌺' : '🌹'}
                   </span>
                 </span>
-                {/* Gradient sweep on hover */}
                 <div className="absolute inset-0 bg-gradient-to-r from-orange-50 to-yellow-50 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500"></div>
               </button>
             </div>
 
-            {/* Live counter with animation */}
+            {/* Live counter */}
             <div className="flex flex-wrap items-center justify-center gap-6 text-gray-600 animate-fade-in animation-delay-600">
               <div className="flex items-center space-x-2 group">
                 <span className="text-2xl group-hover:animate-wiggle">🌸</span>
@@ -188,7 +269,7 @@ const GivenFlowersHero = () => {
               </div>
             </div>
 
-            {/* Quick donation with love messages */}
+            {/* Quick donation */}
             <div className="mt-12 mb-8 animate-fade-in animation-delay-800">
               <p className="text-sm text-gray-600 mb-3">
                 Quick donation options 
@@ -216,7 +297,7 @@ const GivenFlowersHero = () => {
               </div>
             </div>
 
-            {/* Given Flowers Table Demo Image */}
+            {/* Table Demo Image */}
             <div className="mb-8 animate-fade-in animation-delay-900">
               <img 
                 src={require('./table-demo.png')} 
@@ -229,8 +310,35 @@ const GivenFlowersHero = () => {
               </p>
             </div>
 
-            {/* Inspiring quote */}
-            <div className="mt-8 p-4 bg-white/50 backdrop-blur rounded-2xl max-w-2xl mx-auto animate-fade-in animation-delay-1000">
+            {/* Bouncer Section - Extra Special for Mobile! */}
+            <div className="mb-8 animate-fade-in animation-delay-1000">
+              <div className="relative inline-block">
+                <img 
+                  src={bouncerImage} 
+                  alt="Bouncer - Our Community Guardian Dog" 
+                  className="mx-auto rounded-2xl shadow-2xl max-w-full hover:scale-105 transition-transform duration-300 cursor-pointer"
+                  style={{ maxWidth: '400px', minHeight: '300px' }}
+                  onClick={() => setShowExitPopup(true)} // Let people tap to see popup on mobile!
+                />
+                <div className="absolute -bottom-4 -right-4 bg-gradient-to-r from-orange-500 to-yellow-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-bounce">
+                  Meet Bouncer! 🐕
+                </div>
+                {/* Mobile hint */}
+                <div className="md:hidden absolute -top-4 -left-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg animate-pulse">
+                  Tap me! 👆
+                </div>
+              </div>
+              <p className="text-sm text-gray-600 text-center mt-6">
+                Bouncer keeps watch over our flower community - ensuring every smile is genuine! 🌻
+                <br />
+                <span className="text-xs text-orange-500 md:hidden">
+                  (Tap Bouncer above to join our community!)
+                </span>
+              </p>
+            </div>
+
+            {/* Quote */}
+            <div className="mt-8 p-4 bg-white/50 backdrop-blur rounded-2xl max-w-2xl mx-auto animate-fade-in animation-delay-1200">
               <p className="text-gray-700 italic">
                 "A flower does not think of competing with the flower next to it. It just blooms."
               </p>
@@ -272,9 +380,8 @@ const GivenFlowersHero = () => {
         </div>
       </div>
 
-      {/* Footer with Love */}
+      {/* Footer */}
       <footer className="bg-gradient-to-br from-orange-100 via-yellow-100 to-rose-100 py-12 relative overflow-hidden">
-        {/* Subtle flower pattern */}
         <div className="absolute inset-0 opacity-5">
           {[...Array(20)].map((_, i) => (
             <span
@@ -293,7 +400,6 @@ const GivenFlowersHero = () => {
 
         <div className="max-w-6xl mx-auto px-6 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {/* Column 1 - About with Heart */}
             <div>
               <h3 className="font-bold text-gray-800 mb-4 flex items-center space-x-2">
                 <span className="text-2xl animate-pulse-subtle">🌸</span>
@@ -303,81 +409,42 @@ const GivenFlowersHero = () => {
                 A community movement spreading joy through the simple act of giving flowers. 
                 No cost. No catch. Just love. 💛
               </p>
-              <div className="mt-4 flex space-x-3">
-                <span className="text-2xl hover:animate-wiggle cursor-pointer">🌻</span>
-                <span className="text-2xl hover:animate-wiggle cursor-pointer">🌹</span>
-                <span className="text-2xl hover:animate-wiggle cursor-pointer">🌺</span>
-                <span className="text-2xl hover:animate-wiggle cursor-pointer">🌸</span>
-              </div>
             </div>
 
-            {/* Column 2 - Get Involved */}
             <div>
               <h4 className="font-bold text-gray-800 mb-4">Get Involved</h4>
               <ul className="space-y-2 text-sm">
                 <li>
-                  <a href="#host" className="text-gray-600 hover:text-orange-600 transition flex items-center space-x-1">
-                    <span>Host a Table</span>
-                    <span className="opacity-0 hover:opacity-100">🌻</span>
-                  </a>
+                  <a href="#host" className="text-gray-600 hover:text-orange-600 transition">Host a Table 🌻</a>
                 </li>
                 <li>
-                  <a href="#donate" className="text-gray-600 hover:text-orange-600 transition flex items-center space-x-1">
-                    <span>Make a Donation</span>
-                    <span className="opacity-0 hover:opacity-100">💝</span>
-                  </a>
+                  <a href="#donate" className="text-gray-600 hover:text-orange-600 transition">Make a Donation 💝</a>
                 </li>
                 <li>
-                  <a href="#volunteer" className="text-gray-600 hover:text-orange-600 transition flex items-center space-x-1">
-                    <span>Volunteer</span>
-                    <span className="opacity-0 hover:opacity-100">🤝</span>
-                  </a>
-                </li>
-                <li>
-                  <a href="#partner" className="text-gray-600 hover:text-orange-600 transition flex items-center space-x-1">
-                    <span>Become a Partner</span>
-                    <span className="opacity-0 hover:opacity-100">🤗</span>
-                  </a>
+                  <a href="#volunteer" className="text-gray-600 hover:text-orange-600 transition">Volunteer 🤝</a>
                 </li>
               </ul>
             </div>
 
-            {/* Column 3 - Contact with Love */}
             <div>
               <h4 className="font-bold text-gray-800 mb-4">Contact Us</h4>
               <ul className="space-y-2 text-sm text-gray-600">
-                <li className="flex items-center space-x-2">
-                  <span className="animate-pulse">📧</span>
-                  <a href="mailto:hello@givenflowers.org" className="hover:text-orange-600 transition">
-                    hello@givenflowers.org
-                  </a>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <span className="animate-pulse">📍</span>
-                  <span>Spreading joy in 23 cities</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <span className="animate-pulse">🌻</span>
-                  <span>{flowerCount.toLocaleString()}+ flowers given</span>
-                </li>
-                <li className="flex items-center space-x-2">
-                  <span className="animate-pulse">💕</span>
-                  <span>Countless hearts touched</span>
-                </li>
+                <li>📧 hello@givenflowers.org</li>
+                <li>📍 Spreading joy in 23 cities</li>
+                <li>🌻 {flowerCount.toLocaleString()}+ flowers given</li>
               </ul>
             </div>
 
-            {/* Column 4 - Newsletter with Extra Love */}
             <div>
               <h4 className="font-bold text-gray-800 mb-4">Stay Connected</h4>
               <p className="text-sm text-gray-600 mb-3">
-                Get inspiring stories and updates from the Given Flowers family. 🌻
+                Get updates from the Given Flowers family. 🌻
               </p>
               <form className="space-y-2">
                 <input
                   type="email"
                   placeholder="Your email"
-                  className="w-full px-3 py-2 text-sm border-2 border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                  className="w-full px-3 py-2 text-sm border-2 border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
                 <button
                   type="submit"
@@ -386,121 +453,138 @@ const GivenFlowersHero = () => {
                   Join Our Garden 🌻
                 </button>
               </form>
-              <p className="text-xs text-gray-500 mt-2">
-                We promise only good vibes & flower power! 🌈
-              </p>
             </div>
           </div>
 
-          {/* Bottom bar with love */}
-          <div className="mt-8 pt-8 border-t border-orange-200">
-            <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-600">
-              <p className="flex items-center space-x-2">
-                <span>© 2024 Given Flowers. All rights reserved.</span>
-                <span className="text-red-500 animate-pulse">Made with</span>
-                <span className="text-xl animate-heartbeat">❤️</span>
-              </p>
-              <div className="flex space-x-4 mt-4 md:mt-0">
-                <a href="#privacy" className="hover:text-orange-600 transition">Privacy Policy</a>
-                <a href="#terms" className="hover:text-orange-600 transition">Terms of Service</a>
-                <a href="#nonprofit" className="hover:text-orange-600 transition">501(c)(3) Info</a>
-              </div>
-            </div>
+          <div className="mt-8 pt-8 border-t border-orange-200 text-center">
+            <p className="text-sm text-gray-600">
+              © 2024 Given Flowers. Made with ❤️
+            </p>
           </div>
         </div>
       </footer>
 
-      {/* Donation Modal with Extra Love */}
-      {showDonationModal && (
+      {/* Exit Intent Popup - Works for BOTH Desktop & Mobile! */}
+      {showExitPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 relative animate-scale-up overflow-hidden">
-            {/* Background decoration */}
+          <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-8 relative animate-scale-up overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-yellow-100 to-orange-100 rounded-full transform translate-x-16 -translate-y-16"></div>
             <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-rose-100 to-pink-100 rounded-full transform -translate-x-16 translate-y-16"></div>
             
             <button
-              onClick={() => setShowDonationModal(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10"
+              onClick={() => setShowExitPopup(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10 text-2xl"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              ×
             </button>
 
             <div className="text-center relative z-10">
-              <div className="text-6xl mb-4 animate-bounce">🌻</div>
+              {/* Bouncer front and center! */}
+              <div className="mb-4">
+                <img 
+                  src={bouncerImage} 
+                  alt="Bouncer says wait!" 
+                  className="w-32 h-32 mx-auto rounded-full object-cover shadow-lg animate-bounce"
+                />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                Wait! Bouncer Has Something for You! 🐕
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Before you go, join our flower community and be the first to know when we need table hosts in your area. Plus, get inspiring stories from our flower family! 🌻
+              </p>
+
+              <form onSubmit={handleEmailSubmit} className="space-y-4">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email address"
+                  required
+                  className="w-full px-4 py-3 border-2 border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-center text-lg"
+                />
+                
+                <button
+                  type="submit"
+                  className="w-full py-3 bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-bold rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300 text-lg"
+                >
+                  Join the Flower Family 🌻
+                </button>
+              </form>
+
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                <p className="text-sm text-gray-600 mb-3">
+                  Or make an instant impact:
+                </p>
+                <div className="flex gap-2 justify-center">
+                  {['10', '25', '50'].map((amount) => (
+                    <button
+                      key={amount}
+                      onClick={() => handleDonation(amount)}
+                      className="px-4 py-2 bg-gradient-to-r from-orange-100 to-yellow-100 text-orange-700 rounded-lg hover:from-orange-200 hover:to-yellow-200 transition-all text-sm font-semibold transform hover:scale-105"
+                    >
+                      ${amount}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <p className="text-xs text-gray-500 mt-4">
+                🛡️ No spam, just flower power and community updates!
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Donation Modal */}
+      {showDonationModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full p-8 relative animate-scale-up overflow-hidden">
+            <button
+              onClick={() => setShowDonationModal(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10 text-2xl"
+            >
+              ×
+            </button>
+
+            <div className="text-center relative z-10">
+              <div className="text-6xl mb-4">🌻</div>
               <h3 className="text-2xl font-bold text-gray-800 mb-2">
                 Your Gift Spreads Joy
               </h3>
               <p className="text-gray-600 mb-6">
-                Every dollar helps us deliver more flowers and create more smiles. Thank you for being amazing! 💛
+                Every dollar helps us deliver more flowers and create more smiles!
               </p>
 
-              {/* Donation amount selector with love */}
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-3">
-                  {[
-                    { amount: '10', impact: '5 flowers', emoji: '🌸' },
-                    { amount: '25', impact: '12 flowers', emoji: '🌻' },
-                    { amount: '50', impact: '25 flowers', emoji: '🌹' },
-                    { amount: '100', impact: '50 flowers', emoji: '💐' }
-                  ].map(({ amount, impact, emoji }) => (
-                    <button
-                      key={amount}
-                      onClick={() => setDonationAmount(amount)}
-                      className={`py-3 rounded-lg font-semibold transition-all transform hover:scale-105 ${
-                        donationAmount === amount
-                          ? 'bg-gradient-to-r from-orange-500 to-yellow-500 text-white shadow-lg'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                      }`}
-                    >
-                      <div>${amount}</div>
-                      <div className="text-xs opacity-75">{impact} {emoji}</div>
-                    </button>
-                  ))}
-                </div>
-
-                {/* Custom amount */}
-                <div>
-                  <label className="block text-sm text-gray-600 mb-2">Or enter custom amount:</label>
-                  <input
-                    type="number"
-                    value={donationAmount}
-                    onChange={(e) => setDonationAmount(e.target.value)}
-                    className="w-full px-4 py-2 border-2 border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                    placeholder="Enter amount"
-                  />
-                </div>
-
-                {/* Donate button with love */}
-                <button
-                  onClick={() => handleDonation(donationAmount)}
-                  className="w-full py-4 bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-bold rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300 group"
-                >
-                  <span className="flex items-center justify-center space-x-2">
-                    <span>Donate ${donationAmount}</span>
-                    <span className="group-hover:animate-wiggle">💝</span>
-                  </span>
-                </button>
-
-                {/* Impact message with animation */}
-                <div className="bg-gradient-to-r from-orange-50 to-yellow-50 p-4 rounded-lg">
-                  <p className="text-sm text-gray-700">
-                    💐 Your ${donationAmount} donation = 
-                    <span className="font-bold text-orange-600"> {Math.floor(donationAmount / 2)} flowers</span> for your community
-                  </p>
-                  <p className="text-xs text-gray-600 mt-1">
-                    That's {Math.floor(donationAmount / 2)} moments of unexpected joy! 🌈
-                  </p>
-                </div>
-
-                {/* Trust badges */}
-                <div className="flex justify-center space-x-4 text-xs text-gray-500">
-                  <span>🔒 Secure</span>
-                  <span>💚 Tax-deductible</span>
-                  <span>🌍 100% goes to flowers</span>
-                </div>
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                {[
+                  { amount: '10', impact: '5 flowers', emoji: '🌸' },
+                  { amount: '25', impact: '12 flowers', emoji: '🌻' },
+                  { amount: '50', impact: '25 flowers', emoji: '🌹' },
+                  { amount: '100', impact: '50 flowers', emoji: '💐' }
+                ].map(({ amount, impact, emoji }) => (
+                  <button
+                    key={amount}
+                    onClick={() => setDonationAmount(amount)}
+                    className={`py-3 rounded-lg font-semibold transition-all ${
+                      donationAmount === amount
+                        ? 'bg-gradient-to-r from-orange-500 to-yellow-500 text-white shadow-lg'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    <div>${amount}</div>
+                    <div className="text-xs opacity-75">{impact} {emoji}</div>
+                  </button>
+                ))}
               </div>
+
+              <button
+                onClick={() => handleDonation(donationAmount)}
+                className="w-full py-4 bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-bold rounded-lg hover:shadow-lg transform hover:scale-105 transition-all"
+              >
+                Donate ${donationAmount} 💝
+              </button>
             </div>
           </div>
         </div>
@@ -508,164 +592,48 @@ const GivenFlowersHero = () => {
 
       <style jsx>{`
         @keyframes fade-in {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
         }
-        
         @keyframes float {
-          0%, 100% {
-            transform: translateY(0) rotate(0deg);
-          }
-          25% {
-            transform: translateY(-20px) rotate(5deg);
-          }
-          75% {
-            transform: translateY(20px) rotate(-5deg);
-          }
+          0%, 100% { transform: translateY(0) rotate(0deg); }
+          25% { transform: translateY(-20px) rotate(5deg); }
+          75% { transform: translateY(20px) rotate(-5deg); }
         }
-        
         @keyframes wiggle {
           0%, 100% { transform: rotate(0deg); }
           25% { transform: rotate(-10deg); }
           75% { transform: rotate(10deg); }
         }
-        
-        @keyframes heartbeat {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.2); }
+        @keyframes scale-up {
+          from { opacity: 0; transform: scale(0.9); }
+          to { opacity: 1; transform: scale(1); }
         }
-        
-        @keyframes particle {
-          0% {
-            opacity: 1;
-            transform: rotate(var(--rotation)) translateX(0);
-          }
-          100% {
-            opacity: 0;
-            transform: rotate(var(--rotation)) translateX(80px);
-          }
-        }
-        
         @keyframes gradient {
           0%, 100% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
         }
-        
         @keyframes pulse-subtle {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.8; }
         }
         
-        .animate-fade-in {
-          animation: fade-in 0.8s ease-out forwards;
-        }
+        .animate-fade-in { animation: fade-in 0.8s ease-out forwards; }
+        .animate-float { animation: float 20s ease-in-out infinite; }
+        .animate-wiggle { animation: wiggle 0.5s ease-in-out; }
+        .animate-scale-up { animation: scale-up 0.3s ease-out; }
+        .animate-gradient { background-size: 200% 200%; animation: gradient 3s ease infinite; }
+        .animate-pulse-subtle { animation: pulse-subtle 3s ease-in-out infinite; }
         
-        .animate-float {
-          animation: float 20s ease-in-out infinite;
-        }
-        
-        .animate-wiggle {
-          animation: wiggle 0.5s ease-in-out;
-        }
-        
-        .animate-heartbeat {
-          animation: heartbeat 1.5s ease-in-out infinite;
-        }
-        
-        .animate-particle {
-          animation: particle 1s ease-out forwards;
-        }
-        
-        .animate-gradient {
-          background-size: 200% 200%;
-          animation: gradient 3s ease infinite;
-        }
-        
-        .animate-pulse-subtle {
-          animation: pulse-subtle 3s ease-in-out infinite;
-        }
-        
-        .animation-delay-200 {
-          animation-delay: 0.2s;
-          opacity: 0;
-        }
-        
-        .animation-delay-400 {
-          animation-delay: 0.4s;
-          opacity: 0;
-        }
-        
-        .animation-delay-600 {
-          animation-delay: 0.6s;
-          opacity: 0;
-        }
-        
-        .animation-delay-800 {
-          animation-delay: 0.8s;
-          opacity: 0;
-        }
-        
-        .animation-delay-1000 {
-          animation-delay: 1s;
-          opacity: 0;
-        }
-        
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
-        
-        @keyframes scale-up {
-          from {
-            opacity: 0;
-            transform: scale(0.9);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1);
-          }
-        }
-        
-        .animate-scale-up {
-          animation: scale-up 0.3s ease-out;
-        }
-        
-        .animate-pulse {
-          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        
-        @keyframes pulse {
-          0%, 100% {
-            opacity: 1;
-          }
-          50% {
-            opacity: .5;
-          }
-        }
-        
-        .animate-bounce {
-          animation: bounce 1s infinite;
-        }
-        
-        @keyframes bounce {
-          0%, 100% {
-            transform: translateY(-25%);
-            animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
-          }
-          50% {
-            transform: translateY(0);
-            animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
-          }
-        }
+        .animation-delay-200 { animation-delay: 0.2s; opacity: 0; }
+        .animation-delay-400 { animation-delay: 0.4s; opacity: 0; }
+        .animation-delay-600 { animation-delay: 0.6s; opacity: 0; }
+        .animation-delay-800 { animation-delay: 0.8s; opacity: 0; }
+        .animation-delay-900 { animation-delay: 0.9s; opacity: 0; }
+        .animation-delay-1000 { animation-delay: 1s; opacity: 0; }
+        .animation-delay-1200 { animation-delay: 1.2s; opacity: 0; }
+        .animation-delay-2000 { animation-delay: 2s; }
+        .animation-delay-4000 { animation-delay: 4s; }
       `}</style>
     </>
   );
