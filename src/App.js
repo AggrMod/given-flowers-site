@@ -143,25 +143,20 @@ const GivenFlowersHero = () => {
         </div>
       )}
 
-      {/* Hero Section */}
-      <div className="bg-gradient-to-br from-orange-50 via-yellow-50 to-rose-50 relative overflow-hidden">
-        {/* Floating flowers */}
-        {[...Array(8)].map((_, i) => (
-          <FloatingFlower 
-            key={i} 
-            delay={i * 2} 
-            emoji={['🌻', '🌹', '🌸', '🌺', '🌷', '💐', '🌼', '🏵️'][i]}
+      {/* HERO SECTION WITH GIF AS BACKGROUND */}
+      <div className="relative w-full h-screen overflow-hidden">
+        {/* GIF Background - FULL SCREEN HERO */}
+        <div className="absolute inset-0 w-full h-full">
+          <img 
+            src={heroGif} 
+            alt="Given Flowers volunteers spreading joy with free flowers" 
+            className="w-full h-full object-cover"
           />
-        ))}
-
-        {/* Background circles */}
-        <div className="absolute inset-0">
-          <div className="absolute top-20 left-10 w-96 h-96 bg-orange-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-yellow-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse animation-delay-2000"></div>
-          <div className="absolute top-40 right-20 w-64 h-64 bg-rose-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse animation-delay-4000"></div>
+          {/* Gradient overlay for text readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/50"></div>
         </div>
 
-        {/* Navigation */}
+        {/* Navigation - Over the GIF */}
         <nav className="relative z-20 p-6">
           <div className="max-w-7xl mx-auto flex justify-between items-center">
             <div 
@@ -182,22 +177,22 @@ const GivenFlowersHero = () => {
                 }}
               />
               <div>
-                <span className="text-2xl font-bold" style={{color: '#D2691E', fontFamily: 'cursive'}}>
+                <span className="text-2xl font-bold text-white drop-shadow-lg" style={{fontFamily: 'cursive'}}>
                   Given Flowers
                 </span>
-                <p className="text-xs text-orange-600 opacity-75">Spreading joy, one flower at a time</p>
+                <p className="text-xs text-white/90 drop-shadow">Spreading joy, one flower at a time</p>
               </div>
             </div>
             <div className="hidden md:flex space-x-6 items-center">
-              <a href="#about" className="text-gray-700 hover:text-orange-600 transition flex items-center space-x-1">
+              <a href="#about" className="text-white hover:text-yellow-300 transition flex items-center space-x-1 drop-shadow">
                 <span>About</span>
                 <span className="text-sm">🌸</span>
               </a>
-              <a href="#impact" className="text-gray-700 hover:text-orange-600 transition flex items-center space-x-1">
+              <a href="#impact" className="text-white hover:text-yellow-300 transition flex items-center space-x-1 drop-shadow">
                 <span>Our Impact</span>
                 <span className="text-sm">💐</span>
               </a>
-              <a href="#contact" className="text-gray-700 hover:text-orange-600 transition flex items-center space-x-1">
+              <a href="#contact" className="text-white hover:text-yellow-300 transition flex items-center space-x-1 drop-shadow">
                 <span>Contact</span>
                 <span className="text-sm">🌹</span>
               </a>
@@ -211,8 +206,8 @@ const GivenFlowersHero = () => {
           </div>
         </nav>
 
-        {/* Hero Content */}
-        <div className="relative z-10 flex items-center justify-center py-0 px-6">
+        {/* Hero Content - Centered over the GIF */}
+        <div className="relative z-10 flex items-center justify-center h-full px-6 -mt-20">
           <div className="text-center max-w-5xl mx-auto">
             {/* Urgency banner */}
             <div className="inline-block bg-gradient-to-r from-orange-100 to-yellow-100 text-orange-700 px-6 py-3 rounded-full text-sm font-semibold mb-6 animate-bounce shadow-lg">
@@ -220,18 +215,18 @@ const GivenFlowersHero = () => {
             </div>
 
             {/* Main headline */}
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight animate-fade-in">
-              <span className="block text-gray-800">Let's Make a Difference</span>
-              <span className="block bg-gradient-to-r from-orange-600 via-rose-500 to-yellow-600 bg-clip-text text-transparent animate-gradient">
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight animate-fade-in text-white drop-shadow-2xl">
+              <span className="block">Let's Make a Difference</span>
+              <span className="block bg-gradient-to-r from-yellow-300 via-rose-300 to-orange-300 bg-clip-text text-transparent animate-gradient">
                 Together—One Flower at a Time
               </span>
             </h1>
 
             {/* Subheadline */}
-            <p className="text-xl md:text-2xl text-gray-700 mb-10 max-w-3xl mx-auto animate-fade-in animation-delay-200">
+            <p className="text-xl md:text-2xl text-white mb-10 max-w-3xl mx-auto animate-fade-in animation-delay-200 drop-shadow-lg">
               Join the movement spreading joy across communities. 
-              <span className="font-semibold text-orange-600"> Donate today or host a table</span>—your 
-              <span className="inline-block animate-pulse text-rose-500 mx-2">❤️</span>
+              <span className="font-semibold text-yellow-300"> Donate today or host a table</span>—your 
+              <span className="inline-block animate-pulse text-rose-300 mx-2">❤️</span>
               community is waiting.
             </p>
 
@@ -268,84 +263,75 @@ const GivenFlowersHero = () => {
             </div>
 
             {/* Live counter */}
-            <div className="flex flex-wrap items-center justify-center gap-6 text-gray-600 animate-fade-in animation-delay-600">
-              <div className="flex items-center space-x-2 group">
+            <div className="flex flex-wrap items-center justify-center gap-6 text-white animate-fade-in animation-delay-600">
+              <div className="flex items-center space-x-2 group bg-black/30 px-4 py-2 rounded-full backdrop-blur">
                 <span className="text-2xl group-hover:animate-wiggle">🌸</span>
                 <span className="font-semibold">127 Active Tables</span>
               </div>
-              <div className="w-px h-6 bg-gray-300"></div>
-              <div className="flex items-center space-x-2 group">
+              <div className="flex items-center space-x-2 group bg-black/30 px-4 py-2 rounded-full backdrop-blur">
                 <span className="text-2xl group-hover:animate-wiggle">💐</span>
                 <span className="font-semibold">{flowerCount.toLocaleString()}+ Flowers Given</span>
               </div>
-              <div className="w-px h-6 bg-gray-300"></div>
-              <div className="flex items-center space-x-2 group">
+              <div className="flex items-center space-x-2 group bg-black/30 px-4 py-2 rounded-full backdrop-blur">
                 <span className="text-2xl group-hover:animate-wiggle">🌍</span>
                 <span className="font-semibold">23 Cities</span>
               </div>
             </div>
 
-            {/* Quick donation */}
-            <div className="mt-12 mb-8 animate-fade-in animation-delay-800">
-              <p className="text-sm text-gray-600 mb-3">
-                Quick donation options 
-                <span className="inline-block ml-2 animate-pulse">💕</span>
+            {/* Big text overlay */}
+            <div className="mt-12 animate-fade-in animation-delay-800">
+              <h2 className="text-3xl font-bold text-white drop-shadow-2xl mb-2">
+                100% FREE Flowers 🌻
+              </h2>
+              <p className="text-xl text-white/90 drop-shadow-lg">
+                No catch. Just spreading joy in our communities.
               </p>
-              <div className="flex flex-wrap justify-center gap-3">
-                {[
-                  { amount: '10', message: '5 smiles' },
-                  { amount: '25', message: '12 flowers' },
-                  { amount: '50', message: '25 hugs' },
-                  { amount: '100', message: '50 moments of joy' }
-                ].map(({ amount, message }) => (
-                  <div key={amount} className="group relative">
-                    <button
-                      onClick={() => handleDonation(amount)}
-                      className="px-6 py-2 bg-gradient-to-r from-orange-100 to-yellow-100 text-orange-700 rounded-full hover:from-orange-200 hover:to-yellow-200 transition-all text-sm font-semibold transform hover:scale-105 hover:shadow-md"
-                    >
-                      ${amount}
-                    </button>
-                    <span className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                      = {message}
-                    </span>
-                  </div>
-                ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <div className="w-8 h-12 border-2 border-white rounded-full flex justify-center">
+            <div className="w-1 h-3 bg-white rounded-full mt-2 animate-pulse"></div>
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Donation Section */}
+      <div className="bg-gradient-to-br from-orange-50 via-yellow-50 to-rose-50 py-12">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <p className="text-sm text-gray-600 mb-3">
+            Quick donation options 
+            <span className="inline-block ml-2 animate-pulse">💕</span>
+          </p>
+          <div className="flex flex-wrap justify-center gap-3">
+            {[
+              { amount: '10', message: '5 smiles' },
+              { amount: '25', message: '12 flowers' },
+              { amount: '50', message: '25 hugs' },
+              { amount: '100', message: '50 moments of joy' }
+            ].map(({ amount, message }) => (
+              <div key={amount} className="group relative">
+                <button
+                  onClick={() => handleDonation(amount)}
+                  className="px-6 py-2 bg-gradient-to-r from-orange-100 to-yellow-100 text-orange-700 rounded-full hover:from-orange-200 hover:to-yellow-200 transition-all text-sm font-semibold transform hover:scale-105 hover:shadow-md"
+                >
+                  ${amount}
+                </button>
+                <span className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  = {message}
+                </span>
               </div>
-            </div>
+            ))}
+          </div>
 
-            {/* Hero GIF with overlay */}
-            <div className="mb-8 animate-fade-in animation-delay-900 relative group">
-              <div className="relative overflow-hidden rounded-2xl shadow-2xl mx-auto" style={{ maxWidth: '700px' }}>
-                <img 
-                  src={heroGif} 
-                  alt="Given Flowers table in action - volunteers giving free flowers to community members" 
-                  className="w-full h-auto"
-                />
-                {/* Subtle gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-70 group-hover:opacity-50 transition-opacity"></div>
-                
-                {/* Text overlay */}
-                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                  <h3 className="text-2xl font-bold mb-2 drop-shadow-lg">This is Given Flowers! 🌻</h3>
-                  <p className="text-lg drop-shadow-md">100% FREE flowers, 100% genuine smiles</p>
-                </div>
-              </div>
-              
-              <p className="text-sm text-gray-600 text-center mt-4">
-                Real moments from our flower stands - spreading joy one bloom at a time! 
-                <span className="inline-block ml-2">💐</span>
-              </p>
-            </div>
-
-
-
-            {/* Quote */}
-            <div className="mt-8 p-4 bg-white/50 backdrop-blur rounded-2xl max-w-2xl mx-auto animate-fade-in animation-delay-1200">
-              <p className="text-gray-700 italic">
-                "A flower does not think of competing with the flower next to it. It just blooms."
-              </p>
-              <p className="text-sm text-orange-600 mt-2">- Zen Shin</p>
-            </div>
+          {/* Quote */}
+          <div className="mt-12 p-4 bg-white/50 backdrop-blur rounded-2xl max-w-2xl mx-auto">
+            <p className="text-gray-700 italic">
+              "A flower does not think of competing with the flower next to it. It just blooms."
+            </p>
+            <p className="text-sm text-orange-600 mt-2">- Zen Shin</p>
           </div>
         </div>
       </div>
