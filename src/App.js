@@ -142,6 +142,8 @@ const GivenFlowersHero = () => {
         .hero-section {
           position: relative;
           z-index: 1;
+          padding-bottom: 0; /* Remove bottom padding */
+          margin-bottom: 0; /* Remove bottom margin */
         }
         
         .hero-background {
@@ -164,6 +166,15 @@ const GivenFlowersHero = () => {
           height: 100%;
           background-color: rgba(255, 253, 240, 0.85);
           z-index: -1;
+        }
+        
+        /* Quick donation section styling */
+        .quick-donation-section {
+          margin-top: 0; /* Remove top margin */
+          padding-top: 1rem; /* Reduced top padding */
+          background-color: transparent; /* Make background transparent */
+          position: relative;
+          z-index: 2;
         }
       `}</style>
 
@@ -254,7 +265,7 @@ const GivenFlowersHero = () => {
         </nav>
 
         {/* Hero Content */}
-        <div className="relative z-10 pt-10 pb-20 px-6">
+        <div className="relative z-10 pt-10 pb-12 px-6"> {/* Reduced bottom padding */}
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left side - Text content */}
             <div className="text-center lg:text-left">
@@ -349,38 +360,43 @@ const GivenFlowersHero = () => {
             </div>
           </div>
         </div>
+        
+        {/* Quick Donation Section - Now inside the hero section */}
+        <div className="relative z-10 quick-donation-section pb-8">
+          <div className="max-w-4xl mx-auto px-6 text-center">
+            <p className="text-sm text-gray-600 mb-3">
+              Quick donation options 
+              <span className="inline-block ml-2 animate-pulse">💕</span>
+            </p>
+            <div className="flex flex-wrap justify-center gap-3">
+              {[
+                { amount: '10', message: '5 smiles' },
+                { amount: '25', message: '12 flowers' },
+                { amount: '50', message: '25 hugs' },
+                { amount: '100', message: '50 moments of joy' }
+              ].map(({ amount, message }) => (
+                <div key={amount} className="group relative">
+                  <button
+                    onClick={() => handleDonation(amount)}
+                    className="px-6 py-2 bg-gradient-to-r from-orange-100 to-yellow-100 text-orange-700 rounded-full hover:from-orange-200 hover:to-yellow-200 transition-all text-sm font-semibold transform hover:scale-105 hover:shadow-md"
+                  >
+                    ${amount}
+                  </button>
+                  <span className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                    = {message}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Quick Donation Section */}
-      <div className="bg-white py-12">
+      {/* Quote Section - Moved outside the hero section */}
+      <div className="bg-white py-8">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <p className="text-sm text-gray-600 mb-3">
-            Quick donation options 
-            <span className="inline-block ml-2 animate-pulse">💕</span>
-          </p>
-          <div className="flex flex-wrap justify-center gap-3">
-            {[
-              { amount: '10', message: '5 smiles' },
-              { amount: '25', message: '12 flowers' },
-              { amount: '50', message: '25 hugs' },
-              { amount: '100', message: '50 moments of joy' }
-            ].map(({ amount, message }) => (
-              <div key={amount} className="group relative">
-                <button
-                  onClick={() => handleDonation(amount)}
-                  className="px-6 py-2 bg-gradient-to-r from-orange-100 to-yellow-100 text-orange-700 rounded-full hover:from-orange-200 hover:to-yellow-200 transition-all text-sm font-semibold transform hover:scale-105 hover:shadow-md"
-                >
-                  ${amount}
-                </button>
-                <span className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                  = {message}
-                </span>
-              </div>
-            ))}
-          </div>
-
           {/* Quote */}
-          <div className="mt-12 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl max-w-2xl mx-auto">
+          <div className="p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl max-w-2xl mx-auto">
             <p className="text-gray-700 italic">
               "A flower does not think of competing with the flower next to it. It just blooms."
             </p>
