@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import logoImage from './given-flowers-logo.jpg';
-import bouncerImage from './bouncer.jpg';
+
+// Using public folder for images to avoid build issues
+const logoImage = '/given-flowers-logo.jpg';
+const bouncerImage = '/bouncer.jpg';
 
 const GivenFlowersHero = () => {
   const [donationAmount, setDonationAmount] = useState('25');
@@ -13,7 +15,6 @@ const GivenFlowersHero = () => {
   const [logoPosition, setLogoPosition] = useState('normal');
   const [isHoveringLogo, setIsHoveringLogo] = useState(false);
   const [email, setEmail] = useState('');
-  const [sessionStartTime] = useState(Date.now());
   
   // Animate flower counter
   useEffect(() => {
