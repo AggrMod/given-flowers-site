@@ -4,6 +4,7 @@ import './App.css';
 // Using public folder for images to avoid build issues
 const logoImage = '/given-flowers-logo.jpg';
 const bouncerImage = '/bouncer.jpg';
+const heroGif = '/given-flowers-hero.gif';
 
 const GivenFlowersHero = () => {
   const [donationAmount, setDonationAmount] = useState('25');
@@ -312,16 +313,27 @@ const GivenFlowersHero = () => {
               </div>
             </div>
 
-            {/* Table Demo Image */}
-            <div className="mb-8 animate-fade-in animation-delay-900">
-              <img 
-                src={require('./table-demo.png')} 
-                alt="Given Flowers table setup with tent, flowers, and FREE sign" 
-                className="mx-auto rounded-2xl shadow-2xl max-w-full"
-                style={{ maxWidth: '600px' }}
-              />
+            {/* Hero GIF with overlay */}
+            <div className="mb-8 animate-fade-in animation-delay-900 relative group">
+              <div className="relative overflow-hidden rounded-2xl shadow-2xl mx-auto" style={{ maxWidth: '700px' }}>
+                <img 
+                  src={heroGif} 
+                  alt="Given Flowers table in action - volunteers giving free flowers to community members" 
+                  className="w-full h-auto"
+                />
+                {/* Subtle gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-70 group-hover:opacity-50 transition-opacity"></div>
+                
+                {/* Text overlay */}
+                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                  <h3 className="text-2xl font-bold mb-2 drop-shadow-lg">This is Given Flowers! 🌻</h3>
+                  <p className="text-lg drop-shadow-md">100% FREE flowers, 100% genuine smiles</p>
+                </div>
+              </div>
+              
               <p className="text-sm text-gray-600 text-center mt-4">
-                This is what a Given Flowers table looks like - ready to spread joy! 🌻
+                Real moments from our flower stands - spreading joy one bloom at a time! 
+                <span className="inline-block ml-2">💐</span>
               </p>
             </div>
 
