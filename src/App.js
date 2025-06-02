@@ -24,26 +24,40 @@ const GivenFlowersHero = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Exit intent detection for desktop and mobile
+  // Exit intent detection for desktop and mobile with session storage
   useEffect(() => {
+    // Check if popup was already shown this session
+    const hasShownThisSession = sessionStorage.getItem('givenFlowersExitPopupShown');
+    if (hasShownThisSession) {
+      setHasShownExitPopup(true);
+      return;
+    }
+
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
     if (isMobile) {
-      // Mobile: Timer-based popup after 30 seconds
+      // Mobile: Timer-based popup after 45 seconds (slightly longer delay)
       const mobileTimer = setTimeout(() => {
         if (!hasShownExitPopup && !showExitPopup) {
           setShowExitPopup(true);
           setHasShownExitPopup(true);
+          sessionStorage.setItem('givenFlowersExitPopupShown', 'true');
         }
-      }, 30000); // 30 seconds
+      }, 45000); // 45 seconds for less intrusive experience
 
       return () => clearTimeout(mobileTimer);
     } else {
-      // Desktop: Mouse leave detection
+      // Desktop: Mouse leave detection with slight delay
       const handleMouseLeave = (e) => {
         if (e.clientY <= 0 && !hasShownExitPopup && !showExitPopup) {
-          setShowExitPopup(true);
-          setHasShownExitPopup(true);
+          // Small delay to avoid accidental triggers
+          setTimeout(() => {
+            if (e.clientY <= 0) {
+              setShowExitPopup(true);
+              setHasShownExitPopup(true);
+              sessionStorage.setItem('givenFlowersExitPopupShown', 'true');
+            }
+          }, 100);
         }
       };
 
@@ -442,14 +456,21 @@ const GivenFlowersHero = () => {
 
       {/* Exit Intent Popup - Works for BOTH Desktop & Mobile! */}
       {showExitPopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="exit-popup-title"
+          aria-describedby="exit-popup-description"
+        >
           <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-8 relative animate-scale-up overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-yellow-100 to-orange-100 rounded-full transform translate-x-16 -translate-y-16"></div>
             <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-rose-100 to-pink-100 rounded-full transform -translate-x-16 translate-y-16"></div>
             
             <button
               onClick={() => setShowExitPopup(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10 text-2xl"
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10 text-2xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 rounded"
+              aria-label="Close popup"
             >
               ×
             </button>
@@ -459,33 +480,39 @@ const GivenFlowersHero = () => {
               <div className="mb-4">
                 <img 
                   src={bouncerImage} 
-                  alt="Bouncer says wait!" 
+                  alt="Bouncer the friendly community dog, wagging his tail with a gentle, welcoming expression"
                   className="w-32 h-32 mx-auto rounded-full object-cover shadow-lg animate-bounce"
                 />
               </div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-2">
+              <h3 id="exit-popup-title" className="text-2xl font-bold text-gray-800 mb-2">
                 Wait! Bouncer Has Something for You! 🐕
               </h3>
-              <p className="text-gray-600 mb-6">
+              <p id="exit-popup-description" className="text-gray-600 mb-6">
                 Before you go, join our flower community and be the first to know when we need table hosts in your area. Plus, get inspiring stories from our flower family! 🌻
               </p>
 
               <form onSubmit={handleEmailSubmit} className="space-y-4">
+                <label htmlFor="email-input" className="sr-only">Email address</label>
                 <input
+                  id="email-input"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email address"
                   required
-                  className="w-full px-4 py-3 border-2 border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-center text-lg"
+                  className="w-full px-4 py-3 border-2 border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-center text-lg focus:outline-none"
+                  aria-describedby="email-help"
                 />
+                <p id="email-help" className="sr-only">We'll send you updates about flower community events and table hosting opportunities in your area</p>
                 
                 <button
                   type="submit"
-                  className="w-full py-3 bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-bold rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300 text-lg"
+                  className="w-full py-3 bg-gradient-to-r from-orange-500 to-yellow-500 text-white font-bold rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300 text-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50"
+                  aria-describedby="join-button-help"
                 >
                   Join the Flower Family 🌻
                 </button>
+                <p id="join-button-help" className="sr-only">Click to subscribe to our flower community newsletter</p>
               </form>
 
               <div className="mt-6 pt-6 border-t border-gray-200">
@@ -497,7 +524,8 @@ const GivenFlowersHero = () => {
                     <button
                       key={amount}
                       onClick={() => handleDonation(amount)}
-                      className="px-4 py-2 bg-gradient-to-r from-orange-100 to-yellow-100 text-orange-700 rounded-lg hover:from-orange-200 hover:to-yellow-200 transition-all text-sm font-semibold transform hover:scale-105"
+                      className="px-4 py-2 bg-gradient-to-r from-orange-100 to-yellow-100 text-orange-700 rounded-lg hover:from-orange-200 hover:to-yellow-200 transition-all text-sm font-semibold transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50"
+                      aria-label={`Donate $${amount} to support flower giving`}
                     >
                       ${amount}
                     </button>
@@ -505,9 +533,15 @@ const GivenFlowersHero = () => {
                 </div>
               </div>
 
-              <p className="text-xs text-gray-500 mt-4">
-                🛡️ No spam, just flower power and community updates!
-              </p>
+              {/* Bouncer's friendly clarification */}
+              <div className="mt-4 pt-4 border-t border-gray-100">
+                <p className="text-xs text-gray-500">
+                  🛡️ No spam, just flower power and community updates!
+                </p>
+                <p className="text-xs text-gray-400 mt-1 italic">
+                  💕 Bouncer is just having fun—flowers are always free! He's our friendly community mascot.
+                </p>
+              </div>
             </div>
           </div>
         </div>
