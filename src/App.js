@@ -111,20 +111,7 @@ const GivenFlowersHero = () => {
     }, 200);
   };
 
-  /*
-  const FloatingFlower = ({ delay, emoji }) => (
-    <div 
-      className="absolute animate-float opacity-20"
-      style={{
-        animationDelay: `${delay}s`,
-        left: `${Math.random() * 100}%`,
-        top: `${Math.random() * 100}%`
-      }}
-    >
-      <span className="text-4xl">{emoji}</span>
-    
- </div>
-  );
+  // FloatingFlower component removed - was unused
 
   return (
     <>
