@@ -271,7 +271,7 @@ const GivenFlowersHero = () => {
             <div className="text-center lg:text-left">
               {/* Urgency banner */}
               <div className="inline-block bg-gradient-to-r from-orange-100 to-yellow-100 text-orange-700 px-6 py-3 rounded-full text-sm font-semibold mb-6 animate-bounce shadow-lg">
-                <span className="animate-pulse">✨</span> Spring 2024 Cohort - Only 5 Spots Left! <span className="animate-pulse">✨</span>
+                <span className="animate-pulse">✨</span> Spring 2025 Cohort - Only 5 Spots Left! <span className="animate-pulse">✨</span>
               </div>
 
               <h1 className="text-5xl md:text-6xl font-bold text-gray-800 mb-6 leading-tight animate-fade-in">
@@ -515,7 +515,7 @@ const GivenFlowersHero = () => {
 
           <div className="mt-8 pt-8 border-t border-orange-200 text-center">
             <p className="text-sm text-gray-600">
-              © 2024 Given Flowers. Made with ❤️
+              © 2025 Given Flowers. Made with ❤️
             </p>
           </div>
         </div>
