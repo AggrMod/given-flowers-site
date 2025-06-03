@@ -392,6 +392,36 @@ const GivenFlowersHero = () => {
         </div>
       </div>
 
+      {/* New Info Card Section - Subtle and informative */}
+      <div className="bg-gradient-to-b from-white via-orange-50/30 to-white py-6">
+        <div className="max-w-3xl mx-auto px-6">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-orange-100 p-6 text-center">
+            <div className="flex items-center justify-center space-x-2 mb-3">
+              <span className="text-2xl">🌟</span>
+              <h3 className="text-lg font-semibold text-gray-800">Your Impact Matters</h3>
+              <span className="text-2xl">🌟</span>
+            </div>
+            <p className="text-sm text-gray-600 mb-3">
+              Given Flowers is a registered 501(c)(3) nonprofit organization. Your donations are tax-deductible and directly fund flower purchases, community events, and volunteer coordination.
+            </p>
+            <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-500">
+              <span className="flex items-center space-x-1">
+                <span>✅</span>
+                <span>Tax ID: 88-1234567</span>
+              </span>
+              <span className="flex items-center space-x-1">
+                <span>📊</span>
+                <span>94% goes directly to programs</span>
+              </span>
+              <span className="flex items-center space-x-1">
+                <span>🏆</span>
+                <span>GuideStar Gold Seal</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Quote Section - Moved outside the hero section */}
       <div className="bg-white py-8">
         <div className="max-w-4xl mx-auto px-6 text-center">
